@@ -1,0 +1,95 @@
+name: AI Feature Review
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  ai-feature-review:
+    # Training workflow: only run code from branches in your own repository.
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Check JavaScript syntax
+        id: syntax
+        continue-on-error: true
+        run: node --check site/scripts.js
+      - name: Run AI review
+        id: review
+        continue-on-error: true
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo 'Missing ANTHROPIC_API_KEY repository secret.'
+            exit 2
+          fi
+          python review_cli.py --feature landing_page --mode ci --out review-output.json
+      - name: Save report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-review-report
+          path: review-output.json
+          if-no-files-found: warn
+      - name: Comment on pull request
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let body = '## AI feature review\n\n';
+            if (!fs.existsSync('review-output.json')) {
+              body += 'No report was produced. Inspect the Actions logs; this is not a clean review.';
+            } else {
+              const r = JSON.parse(fs.readFileSync('review-output.json', 'utf8'));
+              body += `Reviewer completed: ${r.ok}\n\nBlocking findings: ${(r.blocking || []).length}\n\n`;
+              if (r.error) body += `Reviewer error: ${r.error}\n\n`;
+              const safe = x => String(x ?? '').replace(/\|/g, '/').replace(/[\r\n]/g, ' ');
+              body += '| File and line | Category | Severity | Finding |\n|---|---|---|---|\n';
+              for (const f of r.findings || []) {
+                body += `| ${safe(f.file)}:${safe(f.line)} | ${safe(f.category)} | ${safe(f.severity)} | ${safe(f.summary)} |\n`;
+              }
+              body += `\nDenied tool calls recorded: ${(r.denied_calls || []).length}\n`;
+            }
+            body += '\nThe final Actions check also requires JavaScript syntax to pass.';
+            await github.rest.issues.createComment({
+              owner: context.repo.owner, repo: context.repo.repo,
+              issue_number: context.issue.number, body: body.slice(0, 60000)
+            });
+      - name: Enforce review and syntax checks
+        if: always()
+        env:
+          SYNTAX_RESULT: ${{ steps.syntax.outcome }}
+          REVIEW_RESULT: ${{ steps.review.outcome }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          assert os.environ['SYNTAX_RESULT'] == 'success', 'Syntax check did not pass'
+          assert os.environ['REVIEW_RESULT'] == 'success', 'AI review did not pass; inspect its report/logs'
+          p = Path('review-output.json')
+          assert p.exists(), 'Review report missing'
+          r = json.loads(p.read_text())
+          assert r.get('ok') is True and r.get('exit_code') == 0, 'Reviewer failed or blocked'
+          assert isinstance(r.get('findings'), list), 'Invalid findings'
+          assert r.get('blocking') == [], 'Blocking findings remain'
+          print('Review and syntax gates passed.')
+          PY
