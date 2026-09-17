@@ -3,6 +3,13 @@
 A static blog landing page, plus an AI reviewer that runs as a **merge gate**
 on every pull request into `main`.
 
+## Live website
+
+**Vercel:** https://pr-scenario.vercel.app
+
+The website is a responsive, accessible dark editorial journal. The newsletter
+form is an interactive demonstration only; it does not send or store email.
+
 There is no local demo script. The whole scenario is the PR flow.
 
 ```
@@ -111,3 +118,7 @@ Then open a PR from `test` into `main` and add `ANTHROPIC_API_KEY` under
 **Settings → Secrets and variables → Actions**. To make the gate binding
 rather than advisory, add a branch protection rule on `main` requiring the
 `ai-feature-review` check to pass.
+
+## License
+
+MIT License © 2026 Rajesh Kumar. See [LICENSE](LICENSE).

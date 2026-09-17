@@ -3,92 +3,37 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Inkwell — a blog about building things</title>
+  <title>Inkwell — Notes on building things that last</title>
+  <meta name="description" content="An independent journal of software, craft, and the unglamorous parts of shipping.">
+  <meta name="theme-color" content="#0b0d0c">
   <link rel="stylesheet" href="styles.css">
-  <script src="scripts.js"></script>
+  <script src="scripts.js" defer></script>
 </head>
-<body>
-
-  <header class="site-header">
-    <a class="brand" href="/">Inkwell</a>
-    <button id="nav-toggle" class="nav-toggle">Menu</button>
-    <nav id="site-nav">
-      <a href="#featured">Featured</a>
-      <a href="#posts">Posts</a>
-      <a href="#about">About</a>
-      <a href="#subscribe">Subscribe</a>
-    </nav>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header wrap">
+    <div class="brand-group"><a class="brand" href="#top">Inkwell<span aria-hidden="true">.</span></a><span class="brand-note">Independent journal</span></div>
+    <button id="nav-toggle" class="nav-toggle" type="button" aria-controls="site-nav" aria-expanded="false">Menu <span aria-hidden="true">+</span></button>
+    <nav id="site-nav" aria-label="Main navigation"><a href="#featured">Featured</a><a href="#posts">Journal</a><a href="#about">About</a><a class="nav-subscribe" href="#subscribe">Newsletter</a></nav>
   </header>
-
-  <main>
+  <main id="main" class="wrap">
     <section class="hero">
-      <p id="welcome-banner" class="welcome"></p>
-      <h1>Notes on building things that last</h1>
-      <p class="hero-sub">Short essays on software, craft, and the unglamorous parts of shipping.</p>
-      <a class="cta" href="#subscribe" onclick="trackClick('hero-cta')">Get the next one by email</a>
+      <div class="hero-copy"><div class="eyebrow"><span class="dot" aria-hidden="true"></span>Ideas worth slowing down for</div><p id="welcome-banner" class="welcome" hidden></p><h1>Notes on building<br>things that <em>last.</em></h1><p class="hero-intro">Short essays on software, craft, and the unglamorous parts of shipping.</p><a class="text-link" href="#posts">Explore the journal <span aria-hidden="true">↓</span></a></div>
+      <div class="paper-object" aria-hidden="true"><span class="sheet sheet-back"></span><span class="sheet sheet-mid"></span><span class="sheet sheet-front"><i></i><b></b></span></div>
     </section>
-
-    <section id="featured" class="featured">
-      <h2>Featured</h2>
-      <article class="featured-card">
-        <img src="images/workshop.jpg" width="720" height="360">
-        <div>
-          <h3>The workshop, not the workbench</h3>
-          <p>Teams optimise the tool in front of them and ignore the room it sits in.
-             A year of small frictions costs more than the rewrite everyone argues about.</p>
-          <a href="#">Read more</a>
-        </div>
-      </article>
+    <section id="featured" class="featured section-rule">
+      <div class="section-heading"><h2>01 / The featured essay</h2><span>On the practice of making</span></div>
+      <article class="featured-grid"><figure><div class="image-frame"><img src="images/workshop.jpg" width="720" height="450" alt="Welder wearing a protective helmet as sparks fly from metalwork"></div><figcaption>Craft is a practice. Not a shortcut.</figcaption></figure><div class="featured-copy"><span class="eyebrow accent">Perspective / Craft</span><h3>The workshop,<br>not the workbench.</h3><p>Teams optimise the tool in front of them and ignore the room it sits in. A year of small frictions costs more than the rewrite everyone argues about.</p><span class="excerpt-note">From the journal · Essay excerpt</span><a class="text-link" href="#posts">Explore related ideas <span aria-hidden="true">→</span></a></div></article>
     </section>
-
-    <section id="posts" class="posts">
-      <h2>Recent posts</h2>
-      <p id="post-count" class="meta"></p>
-
-      <article class="post-card">
-        <h3>The cost of a fast first draft</h3>
-        <p>Speed early is borrowed from somewhere. Usually from the person who maintains it next.</p>
-        <p class="meta">12 Feb 2026 · 6 min</p>
-        <a href="#">Read more</a>
-      </article>
-
-      <article class="post-card">
-        <h3>Why your tests pass and your users don't</h3>
-        <p>A green suite proves the code does what you told it to. Nothing more.</p>
-        <p class="meta">28 Jan 2026 · 9 min</p>
-        <a href="#">Read more</a>
-      </article>
-
-      <article class="post-card">
-        <h3>Small tools, sharp edges</h3>
-        <p>The best internal tool is the one nobody has to be trained on.</p>
-        <p class="meta">9 Jan 2026 · 4 min</p>
-        <a href="#">Read more</a>
-      </article>
+    <section id="posts" class="posts section-rule">
+      <div class="section-heading"><h2>02 / Recent dispatches</h2><span id="post-count">3 posts recorded</span></div>
+      <article class="post-card"><span class="post-number">01</span><div><span class="eyebrow accent">Process</span><h3>The cost of a fast first draft</h3><p>Speed early is borrowed from somewhere. Usually from the person who maintains it next.</p></div><p class="meta"><time datetime="2026-02-12">12 Feb 2026</time><br>6 min read</p></article>
+      <article class="post-card"><span class="post-number">02</span><div><span class="eyebrow accent">Software</span><h3>Why your tests pass and your users don't</h3><p>A green suite proves the code does what you told it to. Nothing more.</p></div><p class="meta"><time datetime="2026-01-28">28 Jan 2026</time><br>9 min read</p></article>
+      <article class="post-card"><span class="post-number">03</span><div><span class="eyebrow accent">Tools &amp; thinking</span><h3>Small tools, sharp edges</h3><p>The best internal tool is the one nobody has to be trained on.</p></div><p class="meta"><time datetime="2026-01-09">09 Jan 2026</time><br>4 min read</p></article>
     </section>
-
-    <section id="about" class="about">
-      <h2>About the blog</h2>
-      <p>Inkwell is written by one person, irregularly, and edited less than it should be.
-         It has been going since 2021 and has never once kept to a schedule.</p>
-      <p>Archives and older essays live on
-         <a href="https://example.com/inkwell-archive" target="_blank" rel="noopener">the old archive site</a>.</p>
-    </section>
-
-    <section id="subscribe" class="subscribe">
-      <h2>Newsletter</h2>
-      <p>One essay a month. No roundups, no "hey friends", no tracking pixels.</p>
-      <form id="newsletter-form">
-        <input id="newsletter-email" type="email" placeholder="you@example.com">
-        <button type="submit">Subscribe</button>
-      </form>
-      <p id="newsletter-status" class="status"></p>
-    </section>
+    <section id="about" class="about section-rule"><div><h2 class="eyebrow accent">03 / A note from the editor</h2><p class="about-title">Less noise.<br><em>More substance.</em></p></div><div class="about-copy"><p>Inkwell is written by one person, irregularly, and edited less than it should be. It has been going since 2021 and has never once kept to a schedule.</p><p>Short essays. Honest observations. A little space to think about the things we build, and how we build them.</p><span class="signature">The Inkwell journal</span></div></section>
+    <section id="subscribe" class="subscribe"><div class="newsletter-heading"><span class="eyebrow accent">A letter, not a feed</span><h2>A little perspective.<br><em>In your inbox.</em></h2><p>One essay a month. No roundups, no noise.<br>Just something worth reading.</p></div><div class="newsletter-form-wrap"><span class="demo-badge">Newsletter preview</span><form id="newsletter-form"><label for="newsletter-email">Email address</label><div class="input-row"><input id="newsletter-email" type="email" required autocomplete="email" placeholder="you@example.com" aria-describedby="demo-note newsletter-status"><button type="submit">Try it <span aria-hidden="true">↗</span></button></div></form><p id="demo-note" class="demo-note">This is a demo. Your email is not sent or stored.</p><p id="newsletter-status" class="status" role="status" aria-live="polite"></p></div></section>
   </main>
-
-  <footer class="site-footer">
-    <p>&copy; 2026 Inkwell. All rights     reserved.</p>
-  </footer>
-
+  <footer class="site-footer wrap"><a class="brand" href="#top">Inkwell<span aria-hidden="true">.</span></a><p>© 2026 Inkwell. Made with thought.</p><a href="#top" class="text-link">Back to top <span aria-hidden="true">↑</span></a></footer>
 </body>
 </html>

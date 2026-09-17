@@ -1,49 +1,44 @@
-// Inkwell — landing page behaviour.
-
-// Personalised greeting, e.g. /?welcome=Priya
-var params = new URLSearchParams(window.location.search);
-var welcome = params.get('welcome');
-if (welcome) {
-  // textContent, not innerHTML: the value comes from the URL, so anything
-  // that renders it as markup is an XSS sink.
-  document.getElementById('welcome-banner').textContent =
-    'Welcome back, ' + welcome + '!';
+// Inkwell: small, dependency-free interactions.
+const welcome = new URLSearchParams(window.location.search).get('welcome');
+const banner = document.getElementById('welcome-banner');
+if (welcome && banner) {
+  banner.hidden = false;
+  banner.textContent = 'Welcome back, ' + welcome.slice(0, 80) + '!';
 }
-
-// Mobile menu.
-var toggle = document.getElementById('nav-toggle');
-toggle.addEventListener('click', function () {
-  document.getElementById('site-nav').classList.toggle('open');
-});
-
-// Newsletter signup.
-var form = document.getElementById('newsletter-form');
-var status = document.getElementById('newsletter-status');
-
-form.addEventListener('submit', function (event) {
-  event.preventDefault();
-  var email = document.getElementById('newsletter-email').value;
-
-  if (email.indexOf('@') !== -1) {
-    status.textContent = 'Thanks! Check your inbox to confirm.';
-    subscribe(email);
-  } else {
-    status.textContent = 'Please enter a valid email address.';
-  }
-});
-
-function subscribe(email) {
-  fetch('https://example.invalid/api/subscribe', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: email })
+const toggle = document.getElementById('nav-toggle');
+const nav = document.getElementById('site-nav');
+if (toggle && nav) {
+  toggle.addEventListener('click', function () {
+    const open = nav.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(open));
+  });
+  nav.addEventListener('click', function (event) {
+    if (event.target.closest('a')) {
+      nav.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' && nav.classList.contains('open')) {
+      nav.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.focus();
+    }
   });
 }
-
-function trackClick(label) {
-  console.log('clicked', label);
+const form = document.getElementById('newsletter-form');
+const email = document.getElementById('newsletter-email');
+const statusEl = document.getElementById('newsletter-status');
+if (form && email && statusEl) {
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+    statusEl.textContent = 'Preview complete. No subscription was created, and your email was not sent or stored.';
+    form.reset();
+  });
 }
-
-// Show how many posts are listed, under the "Recent posts" heading.
-var cards = document.querySelectorAll('.post-card');
-document.getElementById('post-count').textContent = cards.length + ' posts';
+const count = document.getElementById('post-count');
+if (count) {
+  const postTotal = document.querySelectorAll('.post-card').length;
+  count.textContent = postTotal + ' ' + (postTotal === 1 ? 'post' : 'posts') + ' recorded';
+}
