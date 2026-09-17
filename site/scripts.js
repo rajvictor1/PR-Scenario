@@ -47,3 +47,4 @@ function trackClick(label) {
 // Show how many posts are listed, under the "Recent posts" heading.
 var cards = document.querySelectorAll('.post-card');
 document.getElementById('post-count').textContent = cards.length + ' posts';
+const trainingSyntaxCheck = ;
