@@ -38,4 +38,7 @@ if (form && email && statusEl) {
   });
 }
 const count = document.getElementById('post-count');
-if (count) count.textContent = document.querySelectorAll('.post-card').length + ' posts';
+if (count) {
+  const postTotal = document.querySelectorAll('.post-card').length;
+  count.textContent = postTotal + ' ' + (postTotal === 1 ? 'post' : 'posts') + ' recorded';
+}
