@@ -28,12 +28,12 @@ if (toggle && nav) {
 }
 const form = document.getElementById('newsletter-form');
 const email = document.getElementById('newsletter-email');
-const status = document.getElementById('newsletter-status');
-if (form && email && status) {
+const statusEl = document.getElementById('newsletter-status');
+if (form && email && statusEl) {
   form.addEventListener('submit', function (event) {
     event.preventDefault();
     if (!form.reportValidity()) return;
-    status.textContent = 'Preview complete. No subscription was created, and your email was not sent or stored.';
+    statusEl.textContent = 'Preview complete. No subscription was created, and your email was not sent or stored.';
     form.reset();
   });
 }
